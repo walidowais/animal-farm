@@ -2,7 +2,7 @@ import random, sys
 
 def main():
 	with open('adjectives.txt') as f:
-		adjectives = f.readlines()
+		adjs = f.readlines()
 
 	with open('animals.txt') as b:
 		animals = b.readlines()
