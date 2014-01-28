@@ -1,16 +1,27 @@
-import random
+import random, sys
 
-with open('adjectives.txt') as f:
-	adjectives = f.readlines()
-	# f.close()
-with open('animals.txt') as b:
-	animals = b.readlines()
-	# f.close()
+def main():
+	with open('adjectives.txt') as f:
+		adjectives = f.readlines()
 
-	s1 = random.choice(adjectives).title()
-	s2 = random.choice(animals)
+	with open('animals.txt') as b:
+		animals = b.readlines()
 
+	if len(sys.argv) == 2:
+		for i in xrange(int(sys.argv[1])):
+			s1 = random.choice(adjectives).title()
+			s2 = random.choice(animals)
 
-	strpre = s1 + s2 
-	strfinal = strpre.replace("\n", " ")
-	print strfinal
+			strpre = s1 + ' ' + s2 
+			# strfinal = strpre.replace('\n', ' ')
+			print strpre
+	else:
+		s1 = random.choice(adjectives).title()
+		s2 = random.choice(animals)
+
+		strpre = s1 + ' ' + s2 
+		# strfinal = strpre.replace('\n', ' ')
+		print strpre
+
+if __name__ == '__main__':
+	main()
