@@ -1,6 +1,6 @@
 import random, sys
 
-def main():
+def changed_main():
 	with open('adjectives.txt') as f:
 		adjs = f.readlines()
 
