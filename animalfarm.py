@@ -17,7 +17,7 @@ import random
 
 #Configuration
 DATABASE = 'barn.db'
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -207,7 +207,12 @@ def page_not_found(error):
 
 #Standard boilerplate for python main
 if __name__ == '__main__':
-	app.run()
+	port = int(os.environ.get('PORT', 5000))
+
+	if port == 5000:
+		DEBUG = True
+
+	app.run(host='0.0.0.0', port=port)
 
 
 
