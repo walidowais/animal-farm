@@ -1,8 +1,8 @@
 import random, sys
 
-def changed_main():
+def main():
 	with open('adjectives.txt') as f:
-		adjs = f.readlines()
+		adjectives = f.readlines()
 
 	with open('animals.txt') as b:
 		animals = b.readlines()
