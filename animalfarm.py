@@ -1,5 +1,5 @@
 #For timestamps in comments  
-import time 
+import time
 
 #For database commands
 import sqlite3
@@ -9,15 +9,18 @@ from flask import Flask, request, session, g, redirect, url_for, \
 	 abort, render_template, flash
 
 #Used to close databases
-from contextlib import closing 
+from contextlib import closing
 
 #Random class for choosing a random topic
-import random     
+import random
+
+#OS to check port and change debug settings
+import os
 
 
 #Configuration
 DATABASE = 'barn.db'
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -67,7 +70,7 @@ def pages(page_num):
 
 
 
-	return render_template('HomePage.html', row=row, comments=commentList, user=session.get("logged_in"))
+	return render_template('HomePage.html', row=row, comments=commentList)
 
 
 #The comment route implements the comment. Essentially redirects back to the
@@ -217,7 +220,13 @@ def page_not_found(error):
 
 #Standard boilerplate for python main
 if __name__ == '__main__':
-	app.run()
+	port = int(os.environ.get('PORT', 5000))
+
+	if port == 5000:
+		DEBUG = True
+		DATABASE = 'test.db'
+
+	app.run(host='0.0.0.0', port=port)
 
 
 
