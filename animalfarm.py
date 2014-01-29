@@ -70,9 +70,9 @@ def pages(page_num):
 	return render_template('HomePage.html', row=row, comments=commentList, user=session.get("logged_in"))
 
 
-@app.route('/new')
-def new():
-	return redirect(url_for('new_url'))
+# @app.route('/new')
+# def new():
+# 	return redirect(url_for('new_url'))
 
 #The comment route implements the comment. Essentially redirects back to the
 #discussion page at the end 
@@ -102,7 +102,6 @@ def comment():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
-
 	if request.method == 'POST':
 		username = request.form['user']
 		password = request.form['pass']
@@ -143,6 +142,7 @@ def signup():
 			if password1 == password2:
 				g.db.execute("INSERT INTO users VALUES(NULL, ?, ?)", (username, request.form['pass']))
 				g.db.commit()
+				#Implement flash message to say user name sign up was successful 
 				return redirect(url_for('new_url'))
 			else:
 				error = "Passwords did not match."
@@ -154,8 +154,25 @@ def about():
 
 @app.route('/new')
 def new_post():
-	return render_template('NewTopic.html')
-
+	print 'hello'
+	error = None
+	if request.method =='POST':
+		title = request.form['Title']
+		cur = g.db.execute("SELECT * FROM topics WHERE topic=:topic_title", {'topic_title':title})
+		if cur.fetchone():
+			error = "Title already taken."
+		else: 
+			text = request.form['bodyfield']
+			if text == None:
+				error = 'No text has been provided.'
+				return render_template('NewTopic.html', error = error)
+			g.db.execute("INSERT INTO topics VALUES(NULL, ?, ?)", (title, text))
+			g.db.commit()
+			cur = g.db.execute('SELECT max(id) FROM topics')
+			max_id = cur.fetchone()[0]
+			return redirect(url_for('pages'), page_num = max_id)
+	 
+	return render_template('NewTopic.html',error = error)
 
 #Generates a random animal name
 def rand_animal_name():
