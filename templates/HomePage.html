@@ -10,6 +10,8 @@
 	<!-- <div style="background-color:red; width:20px; height:100%; float:right"></div>  -->
 
 	<img src="{{ url_for('static', filename='AnimalFarm_3_edit.png')}}" alt="Nice Logo" width = "100%" height = "100%" class = "header">
+
+	{% if debug %}<h1 style="color:red;"> DEBUG MODE </h1> {% endif %}
 	
 	{% if not session.get('logged_in') %}
 		<a href="{{ url_for('login') }}" class="login" >Login</a>

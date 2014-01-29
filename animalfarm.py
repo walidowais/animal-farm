@@ -70,7 +70,7 @@ def pages(page_num):
 
 
 
-	return render_template('HomePage.html', row=row, comments=commentList)
+	return render_template('HomePage.html', row=row, comments=commentList, debug=DEBUG)
 
 
 #The comment route implements the comment. Essentially redirects back to the
