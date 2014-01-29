@@ -39,7 +39,7 @@ def new_url():
 	if(max_id):
 		page = random.randint(1,max_id)
 	else:
-		return redirect(url_for('signup'))
+		return redirect(url_for('new_post'))
 
 	return redirect(url_for('pages' ,page_num = str(page)))
 
@@ -88,9 +88,11 @@ def comment():
 		else:
 			animal_name = rand_animal_name()
 
-		g.db.execute('INSERT INTO comments VALUES(?, ?, ?, ?, ?)', 
-			(session.get('topic_id'), session.get('user_id'), animal_name, request.form['Response'], int(time.time())))
-		g.db.commit()
+		text = request.form['Response']
+		if text != None:
+			g.db.execute('INSERT INTO comments VALUES(?, ?, ?, ?, ?)', 
+				(session.get('topic_id'), session.get('user_id'), animal_name, request.form['Response'], int(time.time())))
+			g.db.commit()
 
 		return redirect(session.get('current_page'))
 
@@ -132,8 +134,11 @@ def new_post():
 		title = request.form['Title']
 		body = request.form['Body']
 
-		g.db.execute('INSERT INTO topics VALUES(NULL, ?, ?)', (title, body))
-		g.db.commit()
+		if title == None or body == None:
+			error = "Field cannot be left blank."
+		else:
+			g.db.execute('INSERT INTO topics VALUES(NULL, ?, ?)', (title, body))
+			g.db.commit()
 
 		cur = g.db.execute('SELECT max(id) FROM topics')
 		max_id = cur.fetchone()[0]
@@ -154,11 +159,13 @@ def signup():
 		else:
 			password1 = request.form['pass']
 			password2 = request.form['pass_conf']
-			if password1 == password2:
+			if password1 == None or password2 == None:
+				error = "Password cannot be blank"
+			elif password1 == password2:
 				g.db.execute("INSERT INTO users VALUES(NULL, ?, ?)", (username, request.form['pass']))
 				g.db.commit()
 				#Implement flash message to say user name sign up was successful 
-				return redirect(url_for('new_url'))
+				return redirect(url_for('login'))
 			else:
 				error = "Passwords did not match."
 	return render_template('signup.html', error = error)
