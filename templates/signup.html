@@ -33,7 +33,7 @@
 				<input type="password" name="pass_conf" value="">
 			</h3>
 			<input type="submit" value="login" class = "buttonish">
-			<p class = "error"> That username is already taken</p>
+			{%if error%}<p class = "error"> That username is already taken</p>{% endif %}
 		</form> 
 	</body>
 </html>

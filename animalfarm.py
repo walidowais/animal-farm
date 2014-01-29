@@ -52,7 +52,7 @@ def pages(page_num):
 	cur = g.db.execute('SELECT max(id) FROM topics')
 	limit = cur.fetchone()[0]
 
-	print page_num, limit, (page_num > limit)
+	# print page_num, limit, (page_num > limit)
 
 	if page_num > limit:
 		print 'aaaa'
@@ -133,6 +133,7 @@ def signup():
 	error = None
 	if request.method == 'POST':
 		username = request.form['user']
+		print username 
 		cur = g.db.execute("SELECT * FROM users WHERE main_username=:user", {'user':username})
 		if cur.fetchone():
 			error = "Username already taken."
@@ -141,6 +142,8 @@ def signup():
 			password2 = request.form['pass_conf']
 			if password1 == password2:
 				g.db.execute("INSERT INTO users VALUES(NULL, ?, ?)", (username, request.form['pass']))
+				g.db.commit()
+				return redirect(url_for('new_url'))
 			else:
 				error = "Passwords did not match."
 	return render_template('signup.html', error = error)
