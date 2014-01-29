@@ -70,10 +70,6 @@ def pages(page_num):
 	return render_template('HomePage.html', row=row, comments=commentList, user=session.get("logged_in"))
 
 
-# @app.route('/new')
-# def new():
-# 	return redirect(url_for('new_url'))
-
 #The comment route implements the comment. Essentially redirects back to the
 #discussion page at the end 
 @app.route('/comment', methods=['POST'])
@@ -170,31 +166,6 @@ def signup():
 @app.route('/about')
 def about():
 	return render_template('About.html')
-
-# @app.route('/new', methods=['GET', 'POST'])
-# def new_post():
-# 	error = None
-
-# 	if request.method =='POST':
-# 		title = request.form['Title']
-# 		cur = g.db.execute("SELECT * FROM topics WHERE topic=:topic_title", {'topic_title':title})
-		
-# 		if cur.fetchone():
-# 			error = "Title already taken."
-# 		else: 
-# 			text = request.form['bodyfield']
-			
-# 			if text == None:
-# 				error = 'No text has been provided.'
-# 				# return render_template('NewTopic.html', error = error)
-# 			else:
-# 				g.db.execute("INSERT INTO topics VALUES(NULL, ?, ?)", (title, text))
-# 				g.db.commit()
-# 				cur = g.db.execute('SELECT max(id) FROM topics')
-# 				max_id = cur.fetchone()[0]
-# 				return redirect(url_for('about'))
-	 
-# 	return render_template('NewTopic.html', error=error)
 
 #Generates a random animal name
 def rand_animal_name():
