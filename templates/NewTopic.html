@@ -20,7 +20,7 @@
 	<a href="{{ url_for('about') }}" class="about"> About </a>
 	
 		<h2>Starting a new topic:</h2>
-		<form method="get" action="{{ url_for('new') }}">
+		<form method="post" action="{{ url_for('new_post') }}">
 			<h3>Title: 
 				<input type="text" name="Title" value="" class = "titlefield">
 			</h3>

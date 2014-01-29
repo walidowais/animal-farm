@@ -125,7 +125,26 @@ def login():
 def logout():
 	session['logged_in'] = False
 	return redirect(url_for('login'))
-		
+
+@app.route('/new', methods=['GET', 'POST'])
+def new_post():
+	error = None
+
+	if request.method == 'POST':
+		#handle input and send
+		title = request.form['Title']
+		body = request.form['Body']
+
+		g.db.execute('INSERT INTO topics VALUES(NULL, ?, ?)', (title, body))
+		g.db.commit()
+
+		cur = g.db.execute('SELECT max(id) FROM topics')
+		max_id = cur.fetchone()[0]
+
+		return redirect(url_for('pages', page_num=max_id))
+	else:
+		#show page and get input
+		return render_template('NewTopic.html', error=error)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -152,27 +171,30 @@ def signup():
 def about():
 	return render_template('About.html')
 
-@app.route('/new')
-def new_post():
-	print 'hello'
-	error = None
-	if request.method =='POST':
-		title = request.form['Title']
-		cur = g.db.execute("SELECT * FROM topics WHERE topic=:topic_title", {'topic_title':title})
-		if cur.fetchone():
-			error = "Title already taken."
-		else: 
-			text = request.form['bodyfield']
-			if text == None:
-				error = 'No text has been provided.'
-				return render_template('NewTopic.html', error = error)
-			g.db.execute("INSERT INTO topics VALUES(NULL, ?, ?)", (title, text))
-			g.db.commit()
-			cur = g.db.execute('SELECT max(id) FROM topics')
-			max_id = cur.fetchone()[0]
-			return redirect(url_for('pages'), page_num = max_id)
+# @app.route('/new', methods=['GET', 'POST'])
+# def new_post():
+# 	error = None
+
+# 	if request.method =='POST':
+# 		title = request.form['Title']
+# 		cur = g.db.execute("SELECT * FROM topics WHERE topic=:topic_title", {'topic_title':title})
+		
+# 		if cur.fetchone():
+# 			error = "Title already taken."
+# 		else: 
+# 			text = request.form['bodyfield']
+			
+# 			if text == None:
+# 				error = 'No text has been provided.'
+# 				# return render_template('NewTopic.html', error = error)
+# 			else:
+# 				g.db.execute("INSERT INTO topics VALUES(NULL, ?, ?)", (title, text))
+# 				g.db.commit()
+# 				cur = g.db.execute('SELECT max(id) FROM topics')
+# 				max_id = cur.fetchone()[0]
+# 				return redirect(url_for('about'))
 	 
-	return render_template('NewTopic.html',error = error)
+# 	return render_template('NewTopic.html', error=error)
 
 #Generates a random animal name
 def rand_animal_name():
