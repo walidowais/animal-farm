@@ -20,7 +20,7 @@ import os
 
 #Configuration
 DATABASE = 'barn.db'
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -127,6 +127,10 @@ def logout():
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_post():
+	if not session.get('logged_in'):
+		#send to login page, w/ topic number to redirect back
+		return redirect(url_for('login'))
+	
 	error = None
 
 	if request.method == 'POST':
@@ -224,13 +228,7 @@ def page_not_found(error):
 
 #Standard boilerplate for python main
 if __name__ == '__main__':
-	port = int(os.environ.get('PORT', 5000))
-
-	if port == 5000:
-		DEBUG = True
-		DATABASE = 'barn.db'
-
-	app.run(host='0.0.0.0', port=port)
+	app.run()
 
 
 
