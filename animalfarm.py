@@ -117,9 +117,9 @@ def login():
 			return redirect(url_for('pages', page_num=session.get('topic_id')))
 		else:
 			error = "There was an error in your submission."
-			return render_template('login.html', error=error)
+			return render_template('Login.html', error=error)
 	else:
-		return render_template('login.html', error=error)
+		return render_template('Login.html', error=error)
 
 @app.route('/logout')
 def logout():
