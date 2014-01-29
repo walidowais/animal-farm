@@ -20,7 +20,7 @@ import os
 
 #Configuration
 DATABASE = 'barn.db'
-DEBUG = False
+DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -47,6 +47,7 @@ def new_url():
 #Displays topic, text, and comments dynamically	
 @app.route('/discussion/<page_num>')
 def pages(page_num):
+	pro = True
 
 	page_num = int(page_num)
 	
@@ -55,10 +56,7 @@ def pages(page_num):
 	cur = g.db.execute('SELECT max(id) FROM topics')
 	limit = cur.fetchone()[0]
 
-	# print page_num, limit, (page_num > limit)
-
 	if page_num > limit:
-		print 'aaaa'
 		return redirect(url_for('invalid_topic'))
 
 
@@ -68,9 +66,7 @@ def pages(page_num):
 	cur = g.db.execute('SELECT * FROM comments WHERE topicid=:uid', {'uid': page_num})
 	commentList = cur.fetchall()
 
-
-
-	return render_template('HomePage.html', row=row, comments=commentList, debug=DEBUG)
+	return render_template('HomePage.html', row=row, comments=commentList, debug=DEBUG, pro=pro)
 
 
 #The comment route implements the comment. Essentially redirects back to the
@@ -150,7 +146,6 @@ def signup():
 	error = None
 	if request.method == 'POST':
 		username = request.form['user']
-		print username 
 		cur = g.db.execute("SELECT * FROM users WHERE main_username=:user", {'user':username})
 		if cur.fetchone():
 			error = "Username already taken."
@@ -224,7 +219,7 @@ if __name__ == '__main__':
 
 	if port == 5000:
 		DEBUG = True
-		DATABASE = 'test.db'
+		DATABASE = 'barn.db'
 
 	app.run(host='0.0.0.0', port=port)
 
