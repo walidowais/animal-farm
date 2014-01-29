@@ -52,6 +52,7 @@ def pages(page_num):
 	page_num = int(page_num)
 	
 	session['topic_id'] = page_num
+	session['current_page'] = request.path
 
 	cur = g.db.execute('SELECT max(id) FROM topics')
 	limit = cur.fetchone()[0]
@@ -77,20 +78,21 @@ def comment():
 	if not session.get('logged_in'):
 		#send to login page, w/ topic number to redirect back
 		return redirect(url_for('login'))
-
-	cur = g.db.execute('SELECT * FROM comments WHERE userid=:uid', {'uid': session.get('user_id')})
-	comments = cur.fetchall()
-
-	if comments:
-		animal_name = comments[0][2]
 	else:
-		animal_name = rand_animal_name()
+		#handle comment/add to db and send back to page
+		cur = g.db.execute('SELECT * FROM comments WHERE userid=:uid', {'uid': session.get('user_id')})
+		comments = cur.fetchall()
 
-	g.db.execute('INSERT INTO comments VALUES(?, ?, ?, ?, ?)', 
-		(session.get('topic_id'), session.get('user_id'), animal_name, request.form['text'], int(time.time())))
-	g.db.commit()
+		if comments:
+			animal_name = comments[0][2]
+		else:
+			animal_name = rand_animal_name()
 
-	return redirect(url_for('pages', page_num=session.get(topic_id)))
+		g.db.execute('INSERT INTO comments VALUES(?, ?, ?, ?, ?)', 
+			(session.get('topic_id'), session.get('user_id'), animal_name, request.form['Response'], int(time.time())))
+		g.db.commit()
+
+		return redirect(session.get('current_page'))
 
 
 #Routes to login redirects user back to page where they left off
